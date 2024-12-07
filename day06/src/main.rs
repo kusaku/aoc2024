@@ -104,7 +104,7 @@ fn find_loop_positions(
         for y in 0..grid[0].len() {
             processed_cells += 1;
 
-            let percent = (processed_cells * 100) / total_cells;
+            let percent = processed_cells * 100 / total_cells;
             if percent > last_percent {
                 print!("\rSimulation progress: {}%", percent);
                 io::stdout().flush().unwrap();
@@ -126,7 +126,7 @@ fn find_loop_positions(
         }
     }
 
-    print!("\r{: <30}\r", "");
+    print!("\r\033[2K\r");
 
     loop_positions
 }

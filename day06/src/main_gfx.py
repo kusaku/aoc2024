@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 
 RED = "\033[31m"
@@ -78,10 +77,9 @@ def find_loop_positions(grid, guard_x, guard_y, guard_heading):
         for y, cell in enumerate(row):
             processed_cells += 1
 
-            percent = (processed_cells * 100) // total_cells
+            percent = processed_cells * 100 // total_cells
             if percent > last_percent:
-                sys.stdout.write(f"\rSimulation progress: {percent}%")
-                sys.stdout.flush()
+                print(f'Simulation progress: {percent}%', end='\r', flush=True)
                 last_percent = percent
 
             if (x, y) == (guard_x, guard_y) or cell == '#':
@@ -96,7 +94,7 @@ def find_loop_positions(grid, guard_x, guard_y, guard_heading):
 
             grid[x][y] = '.'
 
-    sys.stdout.write('\r' + ' ' * 30 + '\r')
+    print('\r\033[2K', end='')
 
     sorted_loops = sorted(loop_positions, key=lambda x: len(x[2]))
 

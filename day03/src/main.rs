@@ -1,5 +1,5 @@
-use std::fs;
 use regex::Regex;
+use std::fs;
 
 fn part1() {
     let memory = fs::read_to_string("my_input.txt").expect("Error reading file");

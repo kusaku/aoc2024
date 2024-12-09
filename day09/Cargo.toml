@@ -1,0 +1,10 @@
+[package]
+name = "day09"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+strip = true        # Strip symbols from the binary.
+lto = true          # Enable Link Time Optimization
+codegen-units = 1   # Reduce number of codegen units to increase optimizations.
+panic = 'abort'     # Abort on panic

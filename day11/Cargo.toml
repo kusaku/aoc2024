@@ -11,4 +11,3 @@ panic = 'abort'     # Abort on panic
 
 [dependencies]
 num = "0.4.3"
-once_cell = "1.20.2"

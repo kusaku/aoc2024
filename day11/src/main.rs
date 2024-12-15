@@ -1,13 +1,13 @@
 use num::BigInt;
-use once_cell::sync::Lazy;
 use std::collections::HashMap;
 use std::fs;
 use std::io::{self, Write};
 use std::str::FromStr;
+use std::sync::LazyLock;
 
-static ZERO: Lazy<BigInt> = Lazy::new(|| BigInt::from(0));
-static ONE: Lazy<BigInt> = Lazy::new(|| BigInt::from(1));
-static MULTIPLIER: Lazy<BigInt> = Lazy::new(|| BigInt::from(2024));
+static ZERO: LazyLock<BigInt> = LazyLock::new(|| BigInt::from(0));
+static ONE: LazyLock<BigInt> = LazyLock::new(|| BigInt::from(1));
+static MULTIPLIER: LazyLock<BigInt> = LazyLock::new(|| BigInt::from(2024));
 
 fn blink(stone_counts: &HashMap<BigInt, BigInt>) -> HashMap<BigInt, BigInt> {
     let mut updated_counts = HashMap::new();
@@ -28,7 +28,9 @@ fn blink(stone_counts: &HashMap<BigInt, BigInt>) -> HashMap<BigInt, BigInt> {
         };
 
         for new_stone in result {
-            *updated_counts.entry(new_stone).or_insert_with(|| ZERO.clone()) += count;
+            *updated_counts
+                .entry(new_stone)
+                .or_insert_with(|| ZERO.clone()) += count;
         }
     }
 
@@ -47,7 +49,7 @@ fn count_stones(initial: Vec<BigInt>, blinks: usize) -> BigInt {
         io::stdout().flush().unwrap();
     }
 
-    println!("\r\x1b[2K");
+    print!("\r\x1b[2K");
 
     stone_counts.values().sum()
 }

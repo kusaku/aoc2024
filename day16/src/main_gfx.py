@@ -1,5 +1,4 @@
 from collections import defaultdict
-from email.policy import default
 from heapq import heappop, heappush
 from pathlib import Path
 
@@ -21,7 +20,7 @@ def parse_maze(input_text):
     return maze, start, end
 
 
-def draw_maze(maze, start, end, path, pixel_size=5, text=None):
+def draw_maze(maze, start, end, path, all_paths=[], pixel_size=5, text=None):
     rows, cols = len(maze), len(maze[0])
     img = Image.new('RGB', (cols * pixel_size, rows * pixel_size), 'black')
     draw = ImageDraw.Draw(img)
@@ -32,6 +31,11 @@ def draw_maze(maze, start, end, path, pixel_size=5, text=None):
             x1, y1 = x0 + pixel_size, y0 + pixel_size
             if cell == '#':
                 draw.rectangle([x0, y0, x1, y1], fill='gray')
+
+    for r, c in all_paths:
+        x0, y0 = c * pixel_size, r * pixel_size
+        x1, y1 = x0 + pixel_size, y0 + pixel_size
+        draw.rectangle([x0, y0, x1, y1], fill='cyan')
 
     for r, c in path:
         x0, y0 = c * pixel_size, r * pixel_size
@@ -179,8 +183,6 @@ def a_star_best_paths(maze, start, end):
         for new_dir in [(direction - 1) % 4, (direction + 1) % 4]:
             heappush(heap, (heuristic2((r, c), start), cost + 1000, r, c, new_dir, path))
 
-    print(len(drawn))
-
     images[0].save(
         f'maze_astar.gif',
         save_all=True,
@@ -229,10 +231,56 @@ def dfs_best_paths(maze, start, end):
                 new_path = path + [(nr, nc)]
                 stack.append((nr, nc, i, new_cost, new_path))
 
-    print(len(drawn))
-
     images[0].save(
         f'maze_dfs.gif',
+        save_all=True,
+        append_images=images[1:],
+        duration=100,
+        loop=0,
+    )
+
+    return paths[min(paths)]
+
+
+def bfs_best_paths(maze, start, end):
+    rows, cols = len(maze), len(maze[0])
+    best_cost = float('inf')
+
+    stack = [(start[0], start[1], 0, 0, [start])]
+    visited = set()
+    paths = defaultdict(list)
+
+    images = [draw_maze(maze, start, end, [])]
+    drawn = set()
+
+    while stack:
+        r, c, direction, cost, path = stack.pop(0)
+
+        if tuple(path) in visited:
+            continue
+
+        visited.add(tuple(path))
+
+        if cost > best_cost:
+            continue
+
+        if tuple(path) not in drawn:
+            images.append(draw_maze(maze, start, end, path))
+            drawn.add(tuple(path))
+
+        if (r, c) == end:
+            paths[cost].append(path)
+            continue
+
+        for i, (dr, dc) in enumerate(DIRECTIONS):
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < rows and 0 <= nc < cols and maze[nr][nc] != '#' and (nr, nc) not in path:
+                new_cost = cost + (1 if i == direction else 1001)
+                new_path = path + [(nr, nc)]
+                stack.append((nr, nc, i, new_cost, new_path))
+
+    images[0].save(
+        f'maze_bfs.gif',
         save_all=True,
         append_images=images[1:],
         duration=100,
@@ -258,30 +306,24 @@ def part2():
     input_text = Path('test_input.txt').read_text().strip()
     maze, start, end = parse_maze(input_text)
 
-    best_paths = dijkstra_best_paths(maze, start, end)
-    # print(f'Answer: {len(set(tile for path in best_paths for tile in path))}')
-    # best_paths = a_star_best_paths(maze, start, end)
-    # print(f'Answer: {len(set(tile for path in best_paths for tile in path))}')
-    # best_paths = dfs_best_paths(maze, start, end)
-    # print(f'Answer: {len(set(tile for path in best_paths for tile in path))}')
+    for func in (dijkstra_best_paths, a_star_best_paths, dfs_best_paths, bfs_best_paths):
+        best_paths = func(maze, start, end)
 
-    # images = [
-    #     # draw_maze(maze, start, end, [])
-    # ]
-    #
-    # for i, path in enumerate(best_paths, start=1):
-    #     img = draw_maze(maze, start, end, path, text=str(i))
-    #     images.append(img)
-    #
-    # images[0].save(
-    #     f'maze_paths.gif',
-    #     save_all=True,
-    #     append_images=images[1:],
-    #     duration=100,
-    #     loop=0,
-    # )
-    #
-    # result = len(set(tile for path in best_paths for tile in path))
+    all_paths = set(tile for path in best_paths for tile in path)
+
+    images = []
+
+    for i, path in enumerate(best_paths, start=1):
+        img = draw_maze(maze, start, end, path, all_paths=all_paths, text=str(i))
+        images.append(img)
+
+    images[0].save(
+        f'maze_paths_test.gif',
+        save_all=True,
+        append_images=images[1:],
+        duration=100,
+        loop=0,
+    )
 
     print(f'Answer: {len(set(tile for path in best_paths for tile in path))}')
 

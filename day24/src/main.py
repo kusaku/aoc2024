@@ -72,31 +72,27 @@ def part2():
     # carryN = fullN OR propN
     # sumN = partN XOR carryN-1 = zN
 
-    max_bits = int(max(out for (*_, out) in gates if out.startswith('z'))[1:])
+    max_bits = sum(1 for (*_, out) in gates if out.startswith('z'))
     swapped_outs = []
     carry_out = out('AND', 'x00')
 
-    for bit_index in range(1, max_bits):
+    for bit_index in range(1, max_bits - 1):
         input, output = f'x{bit_index:02d}', f'z{bit_index:02d}'
-
         part_out = out('XOR', input)
-        sum_out = out('XOR', part_out) or out('XOR', carry_out)
-        full_out = out('AND', input)
         prop_out = out('AND', part_out) or out('AND', carry_out)
+        sum_out = out('XOR', part_out) or out('XOR', carry_out)
         prev_sum_ins = ins(sum_out) | ins(prop_out)
-
         if carry_out not in prev_sum_ins:
             swapped_outs.append(carry_out)
-
         sum_out_ins = ins(sum_out)
-        expected_sum_out = {output}
-        carry_out = out('OR', full_out) or out('OR', prop_out)
-        carry_out_ins = ins(carry_out)
-
         if part_out not in sum_out_ins:
             swapped_outs.append(part_out)
+        expected_sum_out = {output}
         if sum_out not in expected_sum_out:
             swapped_outs.append(sum_out)
+        full_out = out('AND', input)
+        carry_out = out('OR', full_out) or out('OR', prop_out)
+        carry_out_ins = ins(carry_out)
         if full_out not in carry_out_ins:
             swapped_outs.append(full_out)
         if prop_out not in carry_out_ins:

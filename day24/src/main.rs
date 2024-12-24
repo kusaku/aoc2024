@@ -41,15 +41,15 @@ fn simulate<'a>(values: &mut Values<'a>, gates: &Gates<'a>) {
     while !remaining_gates.is_empty() {
         let ready_gates: HashSet<_> = remaining_gates
             .iter()
-            .filter(|gate| values.contains_key(gate.1) && values.contains_key(gate.2))
+            .filter(|&&(_, in1, in2, _)| values.contains_key(in1) && values.contains_key(in2))
             .cloned()
             .collect();
 
-        for gate in ready_gates {
-            let val1 = values[gate.1];
-            let val2 = values[gate.2];
+        for &(op, in1, in2, out) in &ready_gates {
+            let val1 = values[in1];
+            let val2 = values[in2];
 
-            let result = match gate.0 {
+            let result = match op {
                 "AND" => val1 & val2,
                 "OR" => val1 | val2,
                 "XOR" => val1 ^ val2,
@@ -58,6 +58,8 @@ fn simulate<'a>(values: &mut Values<'a>, gates: &Gates<'a>) {
 
             values.insert(gate.3, result);
             remaining_gates.remove(&gate);
+            values.insert(out, result);
+            remaining_gates.remove(&(op, in1, in2, out));
         }
     }
 }
@@ -86,18 +88,18 @@ fn part2() {
     let (_, gates) = parse_input(&input_text);
 
     let out = |s_op: &str, s_in: &str| -> Option<&str> {
-        for gate in &gates {
-            if gate.0 == s_op && (s_in == gate.1 || s_in == gate.2) {
-                return Some(gate.3);
+        for &(op, in1, in2, out) in &gates {
+            if op == s_op && (s_in == in1 || s_in == in2) {
+                return Some(out);
             }
         }
         None
     };
 
     let ins = |s_out: &str| -> HashSet<&str> {
-        for gate in &gates {
-            if gate.3 == s_out {
-                return HashSet::from([gate.1, gate.2]);
+        for &(_, in1, in2, out) in &gates {
+            if out == s_out {
+                return HashSet::from([in1, in2]);
             }
         }
         HashSet::new()
@@ -105,35 +107,40 @@ fn part2() {
 
     let max_bits = gates
         .iter()
-        .filter_map(|gate| gate.3.strip_prefix('z')?.parse::<usize>().ok())
-        .max()
-        .unwrap_or(0);
+        .filter(|&&(_, _, _, out)| out.starts_with('z'))
+        .count();
+
+    // https://en.wikipedia.org/wiki/Adder_(electronics)#Full_adder
+    // partN = xN XOR yN
+    // fullN = xN AND yN
+    // propN = partN AND carryN-1
+    // carryN = fullN OR propN
+    // sumN = partN XOR carryN-1 = zN
 
     let mut swapped_outs = Vec::new();
     let mut carry_out = out("AND", "x00").unwrap();
 
-    for bit_index in 1..max_bits {
+    for bit_index in 1..max_bits - 1 {
         let input = format!("x{:02}", bit_index);
-        let output = format!("z{:02}", bit_index);
         let part_out = out("XOR", &input).unwrap();
-        let sum_out = out("XOR", &part_out).or_else(|| out("XOR", &carry_out)).unwrap();
-        let full_out = out("AND", &input).unwrap();
         let prop_out = out("AND", &part_out).or_else(|| out("AND", &carry_out)).unwrap();
+        let sum_out = out("XOR", &part_out).or_else(|| out("XOR", &carry_out)).unwrap();
         let prev_sum_ins = &ins(&sum_out) | &ins(&prop_out);
         if !prev_sum_ins.contains(carry_out) {
             swapped_outs.push(carry_out);
         }
         let sum_out_ins = ins(&sum_out);
-        let expected_sum_out = HashSet::from([output.as_str()]);
-        carry_out = out("OR", &full_out).or_else(|| out("OR", &prop_out)).unwrap();
-        let carry_out_ins = ins(&carry_out);
-
         if !sum_out_ins.contains(part_out) {
             swapped_outs.push(part_out);
         }
+        let output = format!("z{:02}", bit_index);
+        let expected_sum_out = HashSet::from([output.as_str()]);
         if !expected_sum_out.contains(sum_out) {
             swapped_outs.push(sum_out);
         }
+        let full_out = out("AND", &input).unwrap();
+        carry_out = out("OR", &full_out).or_else(|| out("OR", &prop_out)).unwrap();
+        let carry_out_ins = ins(&carry_out);
         if !carry_out_ins.contains(full_out) {
             swapped_outs.push(full_out);
         }
@@ -142,14 +149,7 @@ fn part2() {
         }
     }
 
-    println!(
-        "Answer: {}",
-        swapped_outs
-            .into_iter()
-            .sorted()
-            .collect::<Vec<_>>()
-            .join(",")
-    );
+    println!("Answer: {}", swapped_outs.into_iter().sorted().join(","));
 }
 
 fn main() {

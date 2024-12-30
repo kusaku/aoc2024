@@ -8,7 +8,7 @@ const SEQ_LEN: usize = 4;
 
 fn part1() {
     let data = fs::read_to_string("my_input.txt").expect("Failed to read file");
-    let secrets: Vec<i64> = data.lines().map(|line| line.parse().unwrap()).collect();
+    let secrets: Vec<i64> = data.trim().lines().map(|line| line.parse().unwrap()).collect();
 
     let mut secret_sum = 0;
     for mut secret in secrets {
@@ -25,7 +25,7 @@ fn part1() {
 
 fn part2() {
     let data = fs::read_to_string("my_input.txt").expect("Failed to read file");
-    let secrets: Vec<i64> = data.lines().map(|line| line.parse().unwrap()).collect();
+    let secrets: Vec<i64> = data.trim().lines().map(|line| line.parse().unwrap()).collect();
 
     let mut amounts: HashMap<Vec<i64>, i64> = HashMap::new();
     for mut secret in secrets {

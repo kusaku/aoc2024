@@ -5,8 +5,9 @@ use std::fs;
 type Position = (usize, usize);
 const DIRECTIONS: [(isize, isize); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 
-fn parse_grid(input: &str) -> (Vec<Vec<char>>, Position, Position) {
-    let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+fn parse_input(filename: &str) -> (Vec<Vec<char>>, Position, Position) {
+    let data = fs::read_to_string(filename).expect("Failed to read file");
+    let grid: Vec<Vec<char>> = data.trim().lines().map(|line| line.chars().collect()).collect();
     let mut start = None;
     let mut end = None;
 
@@ -57,11 +58,10 @@ fn find_shortest_path(grid: &[Vec<char>], start: Position, end: Position) -> Vec
 }
 
 fn part1() {
-    let input_text = fs::read_to_string("test_input.txt").expect("Failed to read file");
-    let (grid, start, end) = parse_grid(&input_text);
+    let (grid, start, end) = parse_input("my_input.txt");
     let path = find_shortest_path(&grid, start, end);
 
-    let min_savings = 0;
+    let min_savings = 100;
     let path_length = path.len();
     let mut cheat_path_count = 0;
 
@@ -88,8 +88,7 @@ fn part1() {
 }
 
 fn part2() {
-    let input_text = fs::read_to_string("test_input.txt").expect("Failed to read file");
-    let (grid, start, end) = parse_grid(&input_text);
+    let (grid, start, end) = parse_input("my_input.txt");
     let path = find_shortest_path(&grid, start, end);
 
     let min_savings = 100;

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def parse_data(filename):
+def parse_input(filename):
     lines = [line for line in Path(filename).read_text().strip().splitlines() if line.strip()]
     a = int(lines[0].split(":")[1].strip())
     b = int(lines[1].split(":")[1].strip())
@@ -61,7 +61,7 @@ def run_program(registers, program):
 
 
 def part1():
-    registers, program = parse_data("my_input.txt")
+    registers, program = parse_input("my_input.txt")
     result = run_program(registers, program)
     answer = ','.join(map(str, result))
 
@@ -69,7 +69,7 @@ def part1():
 
 
 def part2():
-    _, program = parse_data("my_input.txt")
+    _, program = parse_input("my_input.txt")
     a, b, c = 1 << (3 * (len(program) - 1)), 0, 0
     result = [0] * len(program)
 

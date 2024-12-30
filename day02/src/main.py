@@ -2,11 +2,11 @@ from itertools import pairwise
 from pathlib import Path
 
 
-def parse_input():
+def parse_input(filename):
     return [
         list(map(int, line.split()))
         for line
-        in Path('my_input.txt').read_text().splitlines()
+        in Path(filename).read_text().splitlines()
     ]
 
 
@@ -31,13 +31,13 @@ def is_report_safe_with_dampener(report):
 
 
 def part1():
-    safe_reports = sum(is_report_safe(report) for report in parse_input())
+    safe_reports = sum(is_report_safe(report) for report in parse_input('my_input.txt'))
 
     print(f'Answer: {safe_reports}')
 
 
 def part2():
-    safe_reports_with_dampener = sum(is_report_safe_with_dampener(report) for report in parse_input())
+    safe_reports_with_dampener = sum(is_report_safe_with_dampener(report) for report in parse_input('my_input.txt'))
 
     print(f'Answer: {safe_reports_with_dampener}')
 

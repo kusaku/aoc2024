@@ -1,27 +1,23 @@
 use std::collections::{HashMap, HashSet};
 use std::fs;
 
-fn parse_input(file_path: &str) -> (Vec<(usize, usize)>, Vec<Vec<usize>>) {
-    let input_text = fs::read_to_string(file_path).unwrap();
-    let mut sections = input_text.split("\n\n");
-    let rules_section = sections.next().unwrap();
-    let updates_section = sections.next().unwrap();
+fn parse_input(filename: &str) -> (Vec<(usize, usize)>, Vec<Vec<usize>>) {
+    let data = fs::read_to_string(filename).expect("Failed to read file");
+    let sections: Vec<&str> = data.trim().split("\n\n").collect();
+    let rules_section = sections[0];
+    let updates_section = sections[1];
 
     let rules: Vec<(usize, usize)> = rules_section
         .lines()
         .map(|line| {
-            let mut parts = line.split('|').map(|n| n.parse::<usize>().unwrap());
-            (parts.next().unwrap(), parts.next().unwrap())
+            let parts: Vec<usize> = line.split('|').map(|n| n.parse().unwrap()).collect();
+            (parts[0], parts[1])
         })
         .collect();
 
     let updates: Vec<Vec<usize>> = updates_section
         .lines()
-        .map(|line| {
-            line.split(',')
-                .map(|n| n.parse::<usize>().unwrap())
-                .collect()
-        })
+        .map(|line| line.split(',').map(|n| n.parse().unwrap()).collect())
         .collect();
 
     (rules, updates)

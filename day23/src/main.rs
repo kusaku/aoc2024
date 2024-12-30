@@ -5,10 +5,12 @@ use std::fs;
 type Graph<'a> = HashMap<&'a str, HashSet<&'a str>>;
 type Clique<'a> = HashSet<&'a str>;
 
-fn parse_input<'a>(data: &'a str) -> Graph<'a> {
-    let mut graph: Graph = HashMap::new();
+fn parse_input<'a>(filename: &str) -> Graph<'a> {
+    let mut graph: Graph<'a> = HashMap::new();
+    let data = fs::read_to_string(filename).expect("Failed to read file");
+    let leaked_data: &'a str = Box::leak(data.into_boxed_str()); // Leak the string to extend its lifetime
 
-    for line in data.lines() {
+    for line in leaked_data.trim().lines() {
         let parts: Vec<&str> = line.split('-').collect();
         let (node1, node2) = (parts[0], parts[1]);
 
@@ -50,8 +52,7 @@ fn find_cliques<'a>(graph: &'a Graph<'a>) -> Vec<Clique<'a>> {
 }
 
 fn part1() {
-    let data = fs::read_to_string("my_input.txt").expect("Failed to read input file");
-    let graph = parse_input(&data);
+    let graph = parse_input("my_input.txt");
 
     let cliques = find_cliques(&graph);
     let mut triplets: HashSet<Vec<&str>> = HashSet::new();
@@ -68,8 +69,7 @@ fn part1() {
 }
 
 fn part2() {
-    let data = fs::read_to_string("my_input.txt").expect("Failed to read input file");
-    let graph = parse_input(&data);
+    let graph = parse_input("my_input.txt");
 
     let cliques = find_cliques(&graph);
     let largest_clique = cliques.into_iter().max_by_key(|clique| clique.len()).unwrap();

@@ -63,7 +63,7 @@ fn calculate_checksum(blocks: &[Block]) -> usize {
 }
 
 fn part1() {
-    let disk_map = fs::read_to_string("my_input.txt").expect("Failed to read input file");
+    let disk_map = fs::read_to_string("my_input.txt").expect("Failed to read file");
     let mut blocks: Vec<Block> = disk_map
         .trim()
         .to_string()
@@ -87,7 +87,7 @@ fn part1() {
 }
 
 fn part2() {
-    let disk_map = fs::read_to_string("my_input.txt").expect("Failed to read input file");
+    let disk_map = fs::read_to_string("my_input.txt").expect("Failed to read file");
     let mut blocks: Vec<Block> = disk_map
         .trim()
         .to_string()

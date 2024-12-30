@@ -8,9 +8,9 @@ type Region = (Pos, char, HashSet<Pos>, EdgeSet);
 
 const DIRECTIONS: [(char, Pos); 4] = [('N', (-1, 0)), ('E', (0, 1)), ('S', (1, 0)), ('W', (0, -1))];
 
-fn load_map(filename: &str) -> HashMap<Pos, char> {
-    let content = fs::read_to_string(filename).expect("Failed to read file");
-    content
+fn parse_input(filename: &str) -> HashMap<Pos, char> {
+    fs::read_to_string(filename).expect("Failed to read file")
+        .trim()
         .lines()
         .enumerate()
         .flat_map(|(r, line)| {
@@ -88,7 +88,7 @@ fn count_sides(edges: &EdgeSet) -> usize {
 }
 
 fn part1() {
-    let world = load_map("my_input.txt");
+    let world = parse_input("my_input.txt");
     let mut total_cost = 0;
 
     for (_, _, region, edges) in find_regions(&world) {
@@ -99,7 +99,7 @@ fn part1() {
 }
 
 fn part2() {
-    let world = load_map("my_input.txt");
+    let world = parse_input("my_input.txt");
     let mut total_cost = 0;
 
     for (_, _, region, edges) in find_regions(&world) {

@@ -1,17 +1,18 @@
-use std::fs::read_to_string;
+use std::fs;
 use std::io::{self, Write};
 
-fn read_input(file_path: &str) -> Vec<(i64, Vec<i64>)> {
-    let input_data = read_to_string(file_path).expect("Failed to read input file");
-    input_data
+fn parse_input(filename: &str) -> Vec<(i64, Vec<i64>)> {
+    fs::read_to_string(filename)
+        .expect("Failed to read file")
+        .trim()
         .lines()
         .map(|line| {
             let parts: Vec<&str> = line.split(':').collect();
-            let test_value = parts[0].trim().parse::<i64>().expect("Invalid test value");
+            let test_value = parts[0].trim().parse::<i64>().unwrap();
             let numbers = parts[1]
                 .trim()
                 .split_whitespace()
-                .map(|n| n.parse::<i64>().expect("Invalid number"))
+                .map(|n| n.parse::<i64>().unwrap())
                 .collect();
             (test_value, numbers)
         })
@@ -55,8 +56,7 @@ fn is_valid_equation(test_value: i64, numbers: &[i64], allowed_operators: &[&str
     false
 }
 
-fn calculate_total_calibration(file_path: &str, allowed_operators: &[&str]) -> i64 {
-    let equations = read_input(file_path);
+fn calculate_total_calibration(equations: Vec<(i64, Vec<i64>)>, allowed_operators: &[&str]) -> i64 {
     let total_equations = equations.len();
     let mut total_calibration_result = 0;
     let mut completed = 0;
@@ -81,12 +81,14 @@ fn calculate_total_calibration(file_path: &str, allowed_operators: &[&str]) -> i
 }
 
 fn part1() {
-    let result = calculate_total_calibration("my_input.txt", &["+", "*"]);
+    let equations = parse_input("my_input.txt");
+    let result = calculate_total_calibration(equations, &["+", "*"]);
     println!("Answer: {}", result);
 }
 
 fn part2() {
-    let result = calculate_total_calibration("my_input.txt", &["+", "*", "||"]);
+    let equations = parse_input("my_input.txt");
+    let result = calculate_total_calibration(equations, &["+", "*", "||"]);
     println!("Answer: {}", result);
 }
 

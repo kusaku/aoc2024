@@ -55,8 +55,8 @@ fn count_stones(initial: Vec<BigInt>, blinks: usize) -> BigInt {
 }
 
 fn part1() {
-    let input_data = fs::read_to_string("my_input.txt").expect("Failed to read input file");
-    let initial = input_data
+    let data = fs::read_to_string("my_input.txt").expect("Failed to read file");
+    let initial = data
         .trim()
         .split_whitespace()
         .map(|s| BigInt::from_str(s).unwrap())
@@ -68,8 +68,8 @@ fn part1() {
 }
 
 fn part2() {
-    let input_data = fs::read_to_string("my_input.txt").expect("Failed to read input file");
-    let initial = input_data
+    let data = fs::read_to_string("my_input.txt").expect("Failed to read file");
+    let initial = data
         .trim()
         .split_whitespace()
         .map(|s| BigInt::from_str(s).unwrap())
@@ -81,8 +81,8 @@ fn part2() {
 }
 
 fn part3() {
-    let input_data = fs::read_to_string("my_input.txt").expect("Failed to read input file");
-    let initial = input_data
+    let data = fs::read_to_string("my_input.txt").expect("Failed to read file");
+    let initial = data
         .trim()
         .split_whitespace()
         .map(|s| BigInt::from_str(s).unwrap())

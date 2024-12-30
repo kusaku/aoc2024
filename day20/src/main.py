@@ -1,12 +1,11 @@
-import sys
 from heapq import heappop, heappush
 from pathlib import Path
 
 DIRECTIONS = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
 
-def parse_input(input_text):
-    grid = list(map(list, input_text.splitlines()))
+def parse_input(filename):
+    grid = list(map(list, Path(filename).read_text().strip().splitlines()))
     start, end = None, None
     for r, row in enumerate(grid):
         if 'S' in row:
@@ -43,8 +42,7 @@ def find_shortest_path(grid, start, end):
 
 
 def part1():
-    input_text = Path('my_input.txt').read_text().strip()
-    grid, start, end = parse_input(input_text)
+    grid, start, end = parse_input('my_input.txt')
 
     path = find_shortest_path(grid, start, end)
     min_savings = 100
@@ -52,8 +50,7 @@ def part1():
     cheat_path_count = 0
 
     for i in range(path_length - 1):
-        sys.stdout.write(f'\rProgress: {i * 100 // path_length}%')
-        sys.stdout.flush()
+        print(f'Progress: {i * 100 // path_length}%', end='\r', flush=True)
 
         for j in range(i + 1, path_length):
             (r1, c1), (r2, c2) = path[i], path[j]
@@ -65,14 +62,13 @@ def part1():
                 if savings >= min_savings:
                     cheat_path_count += 1
 
-    sys.stdout.write('\r\033[2K')
+    print('\r\033[2K', end='\r')
 
     print(f'Answer: {cheat_path_count}')
 
 
 def part2():
-    input_text = Path('test_input.txt').read_text().strip()
-    grid, start, end = parse_input(input_text)
+    grid, start, end = parse_input('my_input.txt')
 
     path = find_shortest_path(grid, start, end)
     min_savings = 100
@@ -81,8 +77,7 @@ def part2():
     cheat_path_count = 0
 
     for i in range(path_length - 1):
-        sys.stdout.write(f'\rProgress: {i * 100 // path_length}%')
-        sys.stdout.flush()
+        print(f'Progress: {i * 100 // path_length}%', end='\r', flush=True)
 
         for j in range(i + 1, path_length):
             (r1, c1), (r2, c2) = path[i], path[j]
@@ -93,7 +88,7 @@ def part2():
                 if savings >= min_savings:
                     cheat_path_count += 1
 
-    sys.stdout.write('\r\033[2K')
+    print('\r\033[2K', end='\r')
 
     print(f'Answer: {cheat_path_count}')
 

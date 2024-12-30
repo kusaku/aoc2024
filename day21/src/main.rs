@@ -116,7 +116,7 @@ fn min_moves(code: &Sequence, depth: usize, num_moves: &Moves, dir_moves: &Moves
 
 fn part1() {
     let date = fs::read_to_string("my_input.txt").expect("Failed to read file");
-    let codes: Vec<&str> = date.lines().collect();
+    let codes: Vec<&str> = date.trim().lines().collect();
 
     let num_moves = gen_moves(&NUM_KEYPAD);
     let dir_moves = gen_moves(&DIR_KEYPAD);
@@ -136,7 +136,7 @@ fn part1() {
 
 fn part2() {
     let date = fs::read_to_string("my_input.txt").expect("Failed to read file");
-    let codes: Vec<&str> = date.lines().collect();
+    let codes: Vec<&str> = date.trim().lines().collect();
 
     let num_moves = gen_moves(&NUM_KEYPAD);
     let dir_moves = gen_moves(&DIR_KEYPAD);

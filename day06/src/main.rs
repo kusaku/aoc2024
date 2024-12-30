@@ -12,9 +12,9 @@ struct State {
     heading: char,
 }
 
-fn parse_grid(input_file: &str) -> (Grid, usize, usize, char) {
-    let content = fs::read_to_string(input_file).expect("Failed to read input file");
-    let mut grid: Grid = content.lines().map(|line| line.chars().collect()).collect();
+fn parse_input(filename: &str) -> (Grid, usize, usize, char) {
+    let data = fs::read_to_string(filename).expect("Failed to read file");
+    let mut grid: Grid = data.trim().lines().map(|line| line.chars().collect()).collect();
     let mut guard_x = 0;
     let mut guard_y = 0;
     let mut guard_heading = '^';
@@ -106,7 +106,7 @@ fn find_loop_positions(
 
             let percent = processed_cells * 100 / total_cells;
             if percent > last_percent {
-                print!("\rSimulation progress: {}%", percent);
+                print!("\rProgress: {}%", percent);
                 io::stdout().flush().unwrap();
                 last_percent = percent;
             }
@@ -132,14 +132,14 @@ fn find_loop_positions(
 }
 
 fn part1() {
-    let (grid, guard_x, guard_y, guard_heading) = parse_grid("my_input.txt");
+    let (grid, guard_x, guard_y, guard_heading) = parse_input("my_input.txt");
     let (visited, _) = simulate_patrol(&grid, guard_x, guard_y, guard_heading);
     let visited_positions: HashSet<_> = visited.iter().map(|state| (state.x, state.y)).collect();
     println!("Answer: {}", visited_positions.len());
 }
 
 fn part2() {
-    let (mut grid, guard_x, guard_y, guard_heading) = parse_grid("my_input.txt");
+    let (mut grid, guard_x, guard_y, guard_heading) = parse_input("my_input.txt");
     let loop_positions = find_loop_positions(&mut grid, guard_x, guard_y, guard_heading);
     println!("Answer: {}", loop_positions.len());
 }

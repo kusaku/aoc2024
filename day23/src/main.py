@@ -2,10 +2,10 @@ from collections import defaultdict
 from itertools import combinations
 from pathlib import Path
 
-def parse_input(data):
+def parse_input(filename):
     graph = defaultdict(set)
 
-    for line in data:
+    for line in Path(filename).read_text().strip().splitlines():
         node1, node2 = line.split('-')
         graph[node1].add(node2)
         graph[node2].add(node1)
@@ -38,8 +38,7 @@ def find_cliques(graph):
     return cliques
 
 def part1():
-    data = Path('my_input.txt').read_text().strip().splitlines()
-    graph = parse_input(data)
+    graph = parse_input('my_input.txt')
 
     cliques = find_cliques(graph)
     triplets = {
@@ -52,8 +51,7 @@ def part1():
     print(f'Answer: {len(triplets)}')
 
 def part2():
-    data = Path('my_input.txt').read_text().strip().splitlines()
-    graph = parse_input(data)
+    graph = parse_input('my_input.txt')
 
     cliques = find_cliques(graph)
     largest_clique = sorted(max(cliques, key=len))

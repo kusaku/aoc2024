@@ -2,10 +2,10 @@ from collections import deque
 from pathlib import Path
 
 
-def parse_map(input_text):
+def parse_input(filename):
     return [
         [int(char) if char.isdigit() else None for char in line]
-        for line in input_text.splitlines()
+        for line in Path(filename).read_text().strip().splitlines()
     ]
 
 
@@ -87,8 +87,7 @@ def count_unique_trails(topomap, trailhead):
 
 
 def part1():
-    input_text = Path('my_input.txt').read_text().strip()
-    topomap = parse_map(input_text)
+    topomap = parse_input('my_input.txt')
     trailheads = find_trailheads(topomap)
 
     total_score = sum(count_reachable_nines(topomap, trailhead) for trailhead in trailheads)
@@ -97,8 +96,7 @@ def part1():
 
 
 def part2():
-    input_text = Path('my_input.txt').read_text().strip()
-    topomap = parse_map(input_text)
+    topomap = parse_input('my_input.txt')
     trailheads = find_trailheads(topomap)
 
     total_rating = sum(count_unique_trails(topomap, trailhead) for trailhead in trailheads)

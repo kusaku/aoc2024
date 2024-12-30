@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 DIRECTIONS = (('N', (-1, 0)), ('E', (0, 1)), ('S', (1, 0)), ('W', (0, -1)))
 
 
-def load_map(filename):
+def parse_input(filename):
     lines = Path(filename).read_text().strip().splitlines()
     return {
         (r, c): cell
@@ -169,7 +169,7 @@ def process_region(info, draw_area, draw_perim, draw_sides, cell_size, max_value
 
 
 def part1():
-    world = load_map('my_input.txt')
+    world = parse_input('my_input.txt')
     regions = find_regions(world)
 
     cell_size = 10
@@ -192,10 +192,10 @@ def part1():
 
         progress = i * 100 // regions_count
         if progress != last_progress:
-            print(f'\rProgress: {progress}%', end='')
+            print(f'Progress: {progress}%', end='\r', flush=True)
             last_progress = progress
 
-    print('\r\033[2K', end='')
+    print('\r\033[2K', end='\r')
 
     y = 30
     x = max(c for _, c in world) * cell_size // 2

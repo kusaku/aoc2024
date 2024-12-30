@@ -5,8 +5,9 @@ use std::fs;
 type Position = (usize, usize);
 const DIRECTIONS: [(isize, isize); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 
-fn parse_maze(input: &str) -> (Vec<Vec<char>>, Position, Position) {
-    let maze: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+fn parse_input(filename: &str) -> (Vec<Vec<char>>, Position, Position) {
+    let data = fs::read_to_string(filename).expect("Failed to read file");
+    let maze: Vec<Vec<char>> = data.trim().lines().map(|line| line.chars().collect()).collect();
     let mut start = None;
     let mut end = None;
 
@@ -101,8 +102,7 @@ fn dijkstra_best_paths(maze: &[Vec<char>], start: Position, end: Position) -> Ve
 }
 
 fn part1() {
-    let input = fs::read_to_string("my_input.txt").expect("Failed to read input file");
-    let (maze, start, end) = parse_maze(&input);
+    let (maze, start, end) = parse_input("my_input.txt");
 
     let best_cost = dijkstra_lowest_cost(&maze, start, end);
 
@@ -110,8 +110,7 @@ fn part1() {
 }
 
 fn part2() {
-    let input = fs::read_to_string("my_input.txt").expect("Failed to read input file");
-    let (maze, start, end) = parse_maze(&input);
+    let (maze, start, end) = parse_input("my_input.txt");
 
     let best_paths = dijkstra_best_paths(&maze, start, end);
     let unique_count = best_paths

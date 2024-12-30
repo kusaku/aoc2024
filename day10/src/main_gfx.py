@@ -1,4 +1,3 @@
-import sys
 from collections import deque
 from pathlib import Path
 from random import shuffle
@@ -6,10 +5,10 @@ from random import shuffle
 from PIL import Image, ImageDraw
 
 
-def parse_map(input_text):
+def parse_input(filename):
     return [
         [int(char) if char.isdigit() else None for char in line]
-        for line in input_text.splitlines()
+        for line in Path(filename).read_text().strip().splitlines()
     ]
 
 
@@ -114,8 +113,7 @@ def count_unique_trails_with_visualization(topomap, trailhead, frames, pixel_siz
 
 
 def part2_with_gif():
-    input_text = Path('my_input.txt').read_text().strip()
-    topomap = parse_map(input_text)
+    topomap = parse_input('my_input.txt')
     trailheads = find_trailheads(topomap)
     shuffle(trailheads)
 
@@ -124,8 +122,7 @@ def part2_with_gif():
 
     for i, trailhead in enumerate(trailheads):
         total_rating += count_unique_trails_with_visualization(topomap, trailhead, frames)
-        sys.stdout.write(f'\rProgress: {i * 100 // len(trailheads)}%')
-        sys.stdout.flush()
+        print(f'Progress: {i * 100 // len(trailheads)}%', end='\r', flush=True)
 
     frames[0].save(
         'part2_visualization.gif',

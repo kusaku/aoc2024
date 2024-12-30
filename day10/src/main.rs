@@ -3,8 +3,10 @@ use std::fs;
 
 type Topomap = Vec<Vec<Option<u32>>>;
 
-fn parse_map(input_text: &str) -> Topomap {
-    input_text
+fn parse_input(filename: &str) -> Topomap {
+    fs::read_to_string(filename)
+        .expect("Failed to read file")
+        .trim()
         .lines()
         .map(|line| line.chars().map(|c| c.to_digit(10)).collect())
         .collect()
@@ -103,8 +105,7 @@ fn count_unique_trails(topomap: &Topomap, trailhead: (usize, usize)) -> usize {
 }
 
 fn part1() {
-    let input_text = fs::read_to_string("my_input.txt").expect("Failed to read input file");
-    let topomap = parse_map(&input_text.trim());
+    let topomap = parse_input("my_input.txt");
     let trailheads = find_trailheads(&topomap);
 
     let total_score: usize = trailheads
@@ -116,8 +117,7 @@ fn part1() {
 }
 
 fn part2() {
-    let input_text = fs::read_to_string("my_input.txt").expect("Failed to read input file");
-    let topomap = parse_map(&input_text.trim());
+    let topomap = parse_input("my_input.txt");
     let trailheads = find_trailheads(&topomap);
 
     let total_rating: usize = trailheads

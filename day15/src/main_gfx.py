@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -8,8 +7,8 @@ DIRECTIONS = {'^': (-1, 0), 'v': (1, 0), '<': (0, -1), '>': (0, 1)}
 TRANSLATE = {'#': '##', 'O': '[]', '.': '..', '@': '@.'}
 
 
-def load_data(file_path, is_wide=False):
-    lines = Path(file_path).read_text().strip().splitlines()
+def parse_input(filename, is_wide=False):
+    lines = Path(filename).read_text().strip().splitlines()
     layout = []
     moves = ''
     robot_pos = None
@@ -97,15 +96,14 @@ def execute(layout, robot_pos, boxes, moves, is_wide):
 
     for i, move_dir in enumerate(moves):
         if i % (len(moves) // 100 or 1) == 0:
-            sys.stdout.write(f'\rProgress {i * 100 // len(moves)}%')
-            sys.stdout.flush()
+            print(f'Progress {i * 100 // len(moves)}%', end='\r', flush=True)
 
         robot_pos = move(layout, boxes, *robot_pos, *DIRECTIONS[move_dir])
 
         img = draw_image(layout, robot_pos, boxes, move_dir, is_wide)
         images.append(img)
 
-    sys.stdout.write('\r\033[2K')
+    print('\r\033[2K', end='\r')
 
     images[0].save(
         f'warehouse_robot_{'part2' if is_wide else 'part1'}.gif',
@@ -123,13 +121,13 @@ def calculate_gps(boxes):
 
 
 def part1():
-    layout, robot_pos, boxes, moves = load_data('my_input.txt', is_wide=False)
+    layout, robot_pos, boxes, moves = parse_input('my_input.txt', is_wide=False)
     robot_pos, boxes = execute(layout, robot_pos, boxes, moves)
     print(f'Answer: {calculate_gps(boxes)}')
 
 
 def part2():
-    layout, robot_pos, boxes, moves = load_data('my_input.txt', is_wide=True)
+    layout, robot_pos, boxes, moves = parse_input('my_input.txt', is_wide=True)
     robot_pos, boxes = execute(layout, robot_pos, boxes, moves)
     print(f'Answer: {calculate_gps(boxes)}')
 

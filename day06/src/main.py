@@ -1,8 +1,8 @@
 from pathlib import Path
 
 
-def parse_grid(input_file):
-    grid = [list(line) for line in Path(input_file).read_text().splitlines()]
+def parse_input(filename):
+    grid = [list(line) for line in Path(filename).read_text().strip().splitlines()]
 
     for x, row in enumerate(grid):
         for y, cell in enumerate(row):
@@ -53,7 +53,7 @@ def find_loop_positions(grid, guard_x, guard_y, guard_heading):
 
             percent = processed_cells * 100 // total_cells
             if percent > last_percent:
-                print(f'Simulation progress: {percent}%', end='\r', flush=True)
+                print(f'Progress: {percent}%', end='\r', flush=True)
                 last_percent = percent
 
             if (x, y) == (guard_x, guard_y) or cell == '#':
@@ -68,20 +68,20 @@ def find_loop_positions(grid, guard_x, guard_y, guard_heading):
 
             grid[x][y] = '.'
 
-    print('\r\033[2K', end='')
+    print('\r\033[2K', end='\r')
 
     return loop_positions
 
 
 def part1():
-    grid, guard_x, guard_y, guard_heading = parse_grid('my_input.txt')
+    grid, guard_x, guard_y, guard_heading = parse_input('my_input.txt')
     visited, _ = simulate_patrol(grid, guard_x, guard_y, guard_heading)
     visited_positions = {(x, y) for x, y, _ in visited}
     print(f'Answer: {len(visited_positions)}')
 
 
 def part2():
-    grid, guard_x, guard_y, guard_heading = parse_grid('my_input.txt')
+    grid, guard_x, guard_y, guard_heading = parse_input('my_input.txt')
     loop_positions = find_loop_positions(grid, guard_x, guard_y, guard_heading)
     print(f'Answer: {len(loop_positions)}')
 

@@ -1,9 +1,10 @@
 use std::collections::HashMap;
 use std::fs;
 
-fn parse_input() -> (Vec<i32>, Vec<i32>) {
-    fs::read_to_string("my_input.txt")
-        .expect("Error reading file")
+fn parse_input(filename: &str) -> (Vec<i32>, Vec<i32>) {
+    fs::read_to_string(filename)
+        .expect("Failed to read file")
+        .trim()
         .lines()
         .map(|line| {
             line.split_whitespace()
@@ -16,7 +17,7 @@ fn parse_input() -> (Vec<i32>, Vec<i32>) {
 
 fn part1() {
     let total_distance: i32 = {
-        let (mut left_list, mut right_list) = parse_input();
+        let (mut left_list, mut right_list) = parse_input("my_input.txt");
         left_list.sort();
         right_list.sort();
         left_list
@@ -31,7 +32,7 @@ fn part1() {
 
 fn part2() {
     let similarity_score: i32 = {
-        let (left_list, right_list) = parse_input();
+        let (left_list, right_list) = parse_input("my_input.txt");
         let right_count = right_list.into_iter().fold(HashMap::new(), |mut acc, num| {
             *acc.entry(num).or_insert(0) += 1;
             acc

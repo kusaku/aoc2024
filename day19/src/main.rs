@@ -23,10 +23,10 @@ fn count_segmentations(string: &str, segments: &[&str]) -> usize {
 }
 
 fn part1() {
-    let input_data = fs::read_to_string("my_input.txt").expect("Failed to read input file");
-    let parts: Vec<&str> = input_data.trim().split("\n\n").collect();
+    let data = fs::read_to_string("my_input.txt").expect("Failed to read file");
+    let parts: Vec<&str> = data.trim().split("\n\n").collect();
     let patterns: Vec<&str> = parts[0].split(", ").collect();
-    let designs: Vec<&str> = parts[1].split('\n').collect();
+    let designs: Vec<&str> = parts[1].lines().collect();
 
     let possible_count = designs
         .iter()
@@ -37,10 +37,10 @@ fn part1() {
 }
 
 fn part2() {
-    let input_data = fs::read_to_string("my_input.txt").expect("Failed to read input file");
-    let parts: Vec<&str> = input_data.trim().split("\n\n").collect();
+    let data = fs::read_to_string("my_input.txt").expect("Failed to read file");
+    let parts: Vec<&str> = data.trim().split("\n\n").collect();
     let patterns: Vec<&str> = parts[0].split(", ").collect();
-    let designs: Vec<&str> = parts[1].split('\n').collect();
+    let designs: Vec<&str> = parts[1].lines().collect();
 
     let total_ways: usize = designs
         .iter()

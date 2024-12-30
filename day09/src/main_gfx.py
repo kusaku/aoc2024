@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 
 import math
@@ -16,7 +15,7 @@ def defragment(blocks, move_whole_files=False, frames=None):
         progress = (total_blocks - i) * 100 // total_blocks
 
         if progress != last_progress:
-            sys.stdout.write(f'\rProgress: {progress}%')
+            print(f'Progress: {progress}%', end='\r', flush=True)
             last_progress = progress
 
             if frames is not None:
@@ -40,7 +39,7 @@ def defragment(blocks, move_whole_files=False, frames=None):
 
                     break
 
-    print('\r\033[2K', end='')
+    print('\r\033[2K', end='\r')
 
 
 def generate_frame(blocks, scale_factor=2):

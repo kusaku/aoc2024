@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 
 DIRECTIONS = {'^': (-1, 0), 'v': (1, 0), '<': (0, -1), '>': (0, 1)}
@@ -6,8 +5,8 @@ DIRECTIONS = {'^': (-1, 0), 'v': (1, 0), '<': (0, -1), '>': (0, 1)}
 TRANSLATE = {'#': '##', 'O': '[]', '.': '..', '@': '@.'}
 
 
-def load_data(file_path, is_wide=False):
-    lines = Path(file_path).read_text().strip().splitlines()
+def parse_input(filename, is_wide=False):
+    lines = Path(filename).read_text().strip().splitlines()
     layout = []
     moves = ''
     robot_pos = None
@@ -65,12 +64,12 @@ def move(layout, boxes, r, c, dr, dc):
 def execute(layout, robot_pos, boxes, moves):
     for i, move_dir in enumerate(moves):
         if i % (len(moves) // 100 or 1) == 0:
-            sys.stdout.write(f'\rProgress {i * 100 // len(moves)}%')
-            sys.stdout.flush()
+            print(f'Progress {i * 100 // len(moves)}%', end='\r', flush=True)
 
         robot_pos = move(layout, boxes, *robot_pos, *DIRECTIONS[move_dir])
 
-    sys.stdout.write('\r\033[2K')
+    print('\r\033[2K', end='\r')
+
     return robot_pos, boxes
 
 
@@ -79,13 +78,13 @@ def calculate_gps(boxes):
 
 
 def part1():
-    layout, robot_pos, boxes, moves = load_data('my_input.txt', is_wide=False)
+    layout, robot_pos, boxes, moves = parse_input('my_input.txt', is_wide=False)
     robot_pos, boxes = execute(layout, robot_pos, boxes, moves)
     print(f'Answer: {calculate_gps(boxes)}')
 
 
 def part2():
-    layout, robot_pos, boxes, moves = load_data('my_input.txt', is_wide=True)
+    layout, robot_pos, boxes, moves = parse_input('my_input.txt', is_wide=True)
     robot_pos, boxes = execute(layout, robot_pos, boxes, moves)
     print(f'Answer: {calculate_gps(boxes)}')
 

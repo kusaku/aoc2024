@@ -5,8 +5,10 @@ use std::fs;
 type Values<'a> = HashMap<&'a str, u8>;
 type Gates<'a> = HashSet<(&'a str, &'a str, &'a str, &'a str)>;
 
-fn parse_input(input_text: &str) -> (Values, Gates) {
-    let sections: Vec<&str> = input_text.trim().split("\n\n").collect();
+fn parse_input<'a>(filename: &str) -> (Values<'a>, Gates<'a>) {
+    let data = fs::read_to_string(filename).expect("Failed to read file");
+    let leaked_data: &'a str = Box::leak(data.into_boxed_str()); // Leak the string to extend its lifetime
+    let sections: Vec<&str> = leaked_data.trim().split("\n\n").collect();
     let section_inputs = sections[0];
     let section_gates = sections[1];
 
@@ -56,8 +58,6 @@ fn simulate<'a>(values: &mut Values<'a>, gates: &Gates<'a>) {
                 _ => unreachable!(),
             };
 
-            values.insert(gate.3, result);
-            remaining_gates.remove(&gate);
             values.insert(out, result);
             remaining_gates.remove(&(op, in1, in2, out));
         }
@@ -65,8 +65,7 @@ fn simulate<'a>(values: &mut Values<'a>, gates: &Gates<'a>) {
 }
 
 fn part1() {
-    let input_text = fs::read_to_string("my_input.txt").unwrap();
-    let (mut values, gates) = parse_input(&input_text);
+    let (mut values, gates) = parse_input("my_input.txt");
     simulate(&mut values, &gates);
 
     let binary_number: String = values
@@ -84,8 +83,7 @@ fn part1() {
 }
 
 fn part2() {
-    let input_text = fs::read_to_string("my_input.txt").unwrap();
-    let (_, gates) = parse_input(&input_text);
+    let (_, gates) = parse_input("my_input.txt");
 
     let out = |s_op: &str, s_in: &str| -> Option<&str> {
         for &(op, in1, in2, out) in &gates {

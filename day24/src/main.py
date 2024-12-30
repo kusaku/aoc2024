@@ -1,8 +1,8 @@
 from pathlib import Path
 
 
-def parse_input(input_text):
-    section_inputs, section_gates = input_text.split('\n\n')
+def parse_input(filename):
+    section_inputs, section_gates = Path(filename).read_text().strip().split('\n\n')
 
     values = {
         input: int(value)
@@ -41,18 +41,14 @@ def simulate(values, gates):
 
 
 def part1():
-    input_text = Path('my_input.txt').read_text().strip()
-    values, gates = parse_input(input_text)
+    values, gates = parse_input('my_input.txt')
     simulate(values, gates)
-    z_values = {k: v for k, v in values.items() if k.startswith('z')}
-    sorted_bits = [v for k, v in sorted(z_values.items())]
-    binary_number = ''.join(map(str, sorted_bits[::-1]))
+    binary_number = ''.join(str(values[k]) for k in reversed(sorted((k for k in values if k.startswith('z')))))
     print(f'Answer: {int(binary_number, 2)}')
 
 
 def part2():
-    input_text = Path('my_input.txt').read_text().strip()
-    _, gates = parse_input(input_text)
+    _, gates = parse_input('my_input.txt')
 
     def out(s_op, s_in):
         for op, in1, in2, out in gates:

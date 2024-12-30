@@ -1,4 +1,3 @@
-import sys
 from heapq import heappop, heappush
 from pathlib import Path
 
@@ -92,8 +91,7 @@ def part2():
     images = [draw_grid(grid, (0, 0), (70, 70), path)]
 
     for i, (x, y) in enumerate(grid_list):
-        sys.stdout.write(f'\rProgress: {i * 100 // len(grid_list)}%')
-        sys.stdout.flush()
+        print(f'Progress: {i * 100 // len(grid_list)}%', end='\r', flush=True)
 
         grid[y][x] = True
 
@@ -105,7 +103,7 @@ def part2():
             if not path:
                 break
 
-    sys.stdout.write('\r\033[2K')
+    print('\r\033[2K', end='\r')
 
     images[0].save(
         f'grid_paths.gif',

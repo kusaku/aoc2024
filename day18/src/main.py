@@ -1,4 +1,3 @@
-import sys
 from heapq import heappop, heappush
 from pathlib import Path
 
@@ -56,8 +55,7 @@ def part2():
     path = find_shortest_path(grid, grid_size)
 
     for i, (x, y) in enumerate(grid_list):
-        sys.stdout.write(f'\rProgress: {i * 100 // len(grid_list)}%')
-        sys.stdout.flush()
+        print(f'Progress: {i * 100 // len(grid_list)}%', end='\r', flush=True)
 
         grid[y][x] = True
 
@@ -68,7 +66,7 @@ def part2():
             if not path:
                 break
 
-    sys.stdout.write('\r\033[2K')
+    print('\r\033[2K', end='\r')
 
     print(f'Answer: {x},{y}')
 

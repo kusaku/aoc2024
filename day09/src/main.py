@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 
 EMPTY_SPACE = float('inf')
@@ -13,7 +12,7 @@ def defragment(blocks, move_whole_files=False):
         progress = (total_blocks - i) * 100 // total_blocks
 
         if progress != last_progress:
-            sys.stdout.write(f'\rProgress: {progress}%')
+            print(f'Progress: {progress}%', end='\r', flush=True)
             last_progress = progress
 
         file_id, file_length = blocks[i]
@@ -34,7 +33,7 @@ def defragment(blocks, move_whole_files=False):
 
                     break
 
-    print('\r\033[2K', end='')
+    print('\r\033[2K', end='\r')
 
 
 def calculate_checksum(blocks):

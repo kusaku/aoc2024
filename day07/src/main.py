@@ -1,8 +1,8 @@
 from pathlib import Path
 
 
-def read_input(file_path):
-    input_data = Path(file_path).read_text().strip()
+def parse_input(filename):
+    input_data = Path(filename).read_text().strip()
     equations = []
     for line in input_data.splitlines():
         test_value, numbers = line.split(':')
@@ -43,8 +43,7 @@ def is_valid_equation(test_value, numbers, allowed_operators):
     return False
 
 
-def calculate_total_calibration(file_path, allowed_operators):
-    equations = read_input(file_path)
+def calculate_total_calibration(equations, allowed_operators):
     total_calibration_result = 0
     total_equations = len(equations)
     completed = 0
@@ -60,18 +59,20 @@ def calculate_total_calibration(file_path, allowed_operators):
             print(f'Progress: {percent}%', end='\r', flush=True)
             last_percent = percent
 
-    print('\r\033[2K', end='')
+    print('\r\033[2K', end='\r')
 
     return total_calibration_result
 
 
 def part1():
-    result = calculate_total_calibration('my_input.txt', allowed_operators=['+', '*'])
+    equations = parse_input('my_input.txt')
+    result = calculate_total_calibration(equations, allowed_operators=['+', '*'])
     print(f'Answer: {result}')
 
 
 def part2():
-    result = calculate_total_calibration('my_input.txt', allowed_operators=['+', '*', '||'])
+    equations = parse_input('my_input.txt')
+    result = calculate_total_calibration(equations, allowed_operators=['+', '*', '||'])
     print(f'Answer: {result}')
 
 

@@ -2,10 +2,10 @@ from collections import defaultdict
 from pathlib import Path
 
 
-def parse_input(file_path):
-    data = Path(file_path).read_text().strip().split('\n')
-    antennas = [(x, y, freq) for y, line in enumerate(data) for x, freq in enumerate(line) if freq != '.']
-    width, height = len(data[0]), len(data)
+def parse_input(filename):
+    lines = Path(filename).read_text().strip().splitlines()
+    antennas = [(x, y, freq) for y, line in enumerate(lines) for x, freq in enumerate(line) if freq != '.']
+    width, height = len(lines[0]), len(lines)
     return antennas, width, height
 
 

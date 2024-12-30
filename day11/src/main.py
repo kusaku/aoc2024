@@ -1,4 +1,3 @@
-import sys
 from collections import Counter
 from pathlib import Path
 
@@ -27,25 +26,24 @@ def count_stones(initial, blinks):
 
     for i in range(blinks):
         stone_counts = blink(stone_counts)
-        sys.stdout.write(f'\rProgress: {i * 100 // blinks}%')
-        sys.stdout.flush()
+        print(f'Progress: {i * 100 // blinks}%', end='\r', flush=True)
 
-    print('\r\033[2K', end='')
+    print('\r\033[2K', end='\r')
 
     return sum(stone_counts.values())
 
 
 def part1():
-    input_data = Path('my_input.txt').read_text().strip()
-    initial = list(map(int, input_data.split()))
+    data = Path('my_input.txt').read_text().strip()
+    initial = list(map(int, data.split()))
     result = count_stones(initial, 25)
 
     print(f'Answer: {result}')
 
 
 def part2():
-    input_data = Path('my_input.txt').read_text().strip()
-    initial = list(map(int, input_data.split()))
+    data = Path('my_input.txt').read_text().strip()
+    initial = list(map(int, data.split()))
     result = count_stones(initial, 75)
 
     print(f'Answer: {result}')

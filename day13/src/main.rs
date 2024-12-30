@@ -1,16 +1,16 @@
 use std::fs;
 
-fn parse_machine(file_name: &str) -> Vec<(i64, i64, i64, i64, i64, i64)> {
-    fs::read_to_string(file_name)
-        .expect("Unable to read file")
+fn parse_input(filename: &str) -> Vec<(i64, i64, i64, i64, i64, i64)> {
+    fs::read_to_string(filename)
+        .expect("Failed to read file")
         .trim()
         .split("\n\n")
         .map(|block| {
-            let lines: Vec<&str> = block.split('\n').collect();
+            let lines: Vec<&str> = block.lines().collect();
             let parse_line = |line: &str, x_delim: &str, y_delim: &str| {
                 let parts: Vec<i64> = line
                     .split(x_delim).nth(1).unwrap()
-                    .split(y_delim).map(|v| v.parse().expect("Invalid number")).collect();
+                    .split(y_delim).map(|v| v.parse().unwrap()).collect();
                 (parts[0], parts[1])
             };
 
@@ -35,7 +35,7 @@ fn solve_system(a1: i64, b1: i64, p1: i64, a2: i64, b2: i64, p2: i64) -> Option<
 }
 
 fn part1() {
-    let machines = parse_machine("my_input.txt");
+    let machines = parse_input("my_input.txt");
     let mut total_cost = 0;
 
     for (i, &(a1, b1, p1, a2, b2, p2)) in machines.iter().enumerate() {
@@ -51,7 +51,7 @@ fn part1() {
 }
 
 fn part2() {
-    let machines = parse_machine("my_input.txt");
+    let machines = parse_input("my_input.txt");
     let mut total_cost = 0;
     let offset = 10_000_000_000_000;
 

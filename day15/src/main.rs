@@ -15,8 +15,8 @@ static TRANSLATE: LazyLock<HashMap<char, &'static str>> = LazyLock::new(|| {
     ])
 });
 
-fn load_data(
-    file_path: &str,
+fn parse_input(
+    filename: &str,
     is_wide: bool,
 ) -> (
     Vec<Vec<char>>,
@@ -24,13 +24,13 @@ fn load_data(
     HashSet<Vec<(usize, usize)>>,
     String,
 ) {
-    let content = fs::read_to_string(file_path).expect("Failed to read file");
+    let data = fs::read_to_string(filename).expect("Failed to read file");
     let mut layout = Vec::new();
     let mut moves = String::new();
     let mut robot_pos = None;
     let mut boxes = HashSet::new();
 
-    for line in content.lines() {
+    for line in data.trim().lines() {
         if line.starts_with('#') {
             let translated: Vec<char> = if is_wide {
                 line.chars()
@@ -152,7 +152,7 @@ fn calculate_gps(boxes: &HashSet<Vec<(usize, usize)>>) -> usize {
 }
 
 fn part1() {
-    let (layout, robot_pos, mut boxes, moves) = load_data("my_input.txt", false);
+    let (layout, robot_pos, mut boxes, moves) = parse_input("my_input.txt", false);
     let _final_robot_pos = execute(&layout, robot_pos, &mut boxes, &moves);
     let gps_sum = calculate_gps(&boxes);
 
@@ -160,7 +160,7 @@ fn part1() {
 }
 
 fn part2() {
-    let (layout, robot_pos, mut boxes, moves) = load_data("my_input.txt", true);
+    let (layout, robot_pos, mut boxes, moves) = parse_input("my_input.txt", true);
     let _final_robot_pos = execute(&layout, robot_pos, &mut boxes, &moves);
     let gps_sum = calculate_gps(&boxes);
 

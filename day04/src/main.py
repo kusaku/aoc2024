@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 def part1():
-    grid = Path('my_input.txt').read_text().splitlines()
+    grid = Path('my_input.txt').read_text().strip().splitlines()
     rows, cols = len(grid), len(grid[0])
     word = "XMAS"
     word_length = len(word)
@@ -36,8 +36,7 @@ def part1():
 
 
 def part2():
-    # Input grid
-    grid = Path('my_input.txt').read_text().splitlines()
+    grid = Path('my_input.txt').read_text().strip().splitlines()
     rows, cols = len(grid), len(grid[0])
     patterns = [
         ["M.S", ".A.", "M.S"],

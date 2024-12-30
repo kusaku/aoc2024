@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 def part1():
-    memory = Path('my_input.txt').read_text()
+    memory = Path('my_input.txt').read_text().strip()
     pattern = r'mul\((\d{1,3}),(\d{1,3})\)'
 
     total_sum = sum(
@@ -16,7 +16,7 @@ def part1():
 
 
 def part2():
-    memory = Path('my_input.txt').read_text()
+    memory = Path('my_input.txt').read_text().strip()
     pattern = r'mul\((\d{1,3}),(\d{1,3})\)|(do\(\)|don\'t\(\))'
     mul_enabled = True
     total_sum = 0

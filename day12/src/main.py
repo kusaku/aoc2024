@@ -3,7 +3,7 @@ from pathlib import Path
 DIRECTIONS = (('N', (-1, 0)), ('E', (0, 1)), ('S', (1, 0)), ('W', (0, -1)))
 
 
-def load_map(filename):
+def parse_input(filename):
     lines = Path(filename).read_text().strip().splitlines()
     return {
         (r, c): cell
@@ -62,7 +62,7 @@ def count_sides(edges: set):
 
 
 def part1():
-    world = load_map('my_input.txt')
+    world = parse_input('my_input.txt')
     total_cost = 0
 
     for pos, cell, region, edges in find_regions(world):
@@ -72,7 +72,7 @@ def part1():
 
 
 def part2():
-    world = load_map('my_input.txt')
+    world = parse_input('my_input.txt')
     total_cost = 0
 
     for pos, cell, region, edges in find_regions(world):

@@ -7,8 +7,8 @@ from PIL import Image, ImageDraw, ImageFont
 DIRECTIONS = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
 
-def parse_maze(input_text):
-    maze = input_text.splitlines()
+def parse_input(filename):
+    maze = Path(filename).read_text().strip().splitlines()
     start = end = None
     for r, row in enumerate(maze):
         if 'S' in row:
@@ -291,8 +291,7 @@ def bfs_best_paths(maze, start, end):
 
 
 def part1():
-    input_text = Path('my_input.txt').read_text().strip()
-    maze, start, end = parse_maze(input_text)
+    maze, start, end = parse_input('my_input.txt')
 
     best_cost = dijkstra_lowest_cost(maze, start, end)
 
@@ -303,8 +302,7 @@ def part1():
 
 
 def part2():
-    input_text = Path('test_input.txt').read_text().strip()
-    maze, start, end = parse_maze(input_text)
+    maze, start, end = parse_input('my_input.txt')
 
     for func in (dijkstra_best_paths, a_star_best_paths, dfs_best_paths, bfs_best_paths):
         best_paths = func(maze, start, end)

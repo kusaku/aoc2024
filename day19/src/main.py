@@ -15,11 +15,11 @@ def count_segmentations(string, segments, memo={'': 1}):
 
 
 def part1():
-    input_data = Path('my_input.txt').read_text().strip()
-    patterns, designs = input_data.split('\n\n')
+    data = Path('my_input.txt').read_text().strip()
+    patterns, designs = data.split('\n\n')
 
     patterns = patterns.split(', ')
-    designs = designs.split('\n')
+    designs = designs.splitlines()
 
     possible_count = sum(count_segmentations(design, patterns) > 0 for design in designs)
 
@@ -27,11 +27,11 @@ def part1():
 
 
 def part2():
-    input_data = Path('my_input.txt').read_text().strip()
-    patterns, designs = input_data.split('\n\n')
+    data = Path('my_input.txt').read_text().strip()
+    patterns, designs = data.split('\n\n')
 
     patterns = patterns.split(', ')
-    designs = designs.split('\n')
+    designs = designs.splitlines()
 
     total_ways = sum(count_segmentations(design, patterns) for design in designs)
 

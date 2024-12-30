@@ -1,9 +1,8 @@
 from pathlib import Path
 
 
-def parse_input(file_path):
-    input_text = Path(file_path).read_text().strip()
-    rules_section, updates_section = input_text.split('\n\n')
+def parse_input(filename):
+    rules_section, updates_section = Path(filename).read_text().strip().split('\n\n')
 
     rules = [
         tuple(map(int, line.split('|')))

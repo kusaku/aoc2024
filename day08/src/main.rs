@@ -15,9 +15,9 @@ struct Grid {
     height: isize,
 }
 
-fn parse_input(file_path: &str) -> Grid {
-    let file_content = fs::read_to_string(file_path).expect("Failed to read file");
-    let lines: Vec<_> = file_content.lines().collect();
+fn parse_input(filename: &str) -> Grid {
+    let data = fs::read_to_string(filename).expect("Failed to read file");
+    let lines: Vec<_> = data.trim().lines().collect();
 
     Grid {
         antennas: lines

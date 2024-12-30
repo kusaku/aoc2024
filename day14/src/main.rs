@@ -1,13 +1,14 @@
-use std::fs;
 use std::collections::HashMap;
 use std::f64;
+use std::fs;
 
-fn parse_input(input_text: &str) -> (Vec<(i32, i32)>, Vec<(i32, i32)>) {
+fn parse_input(filename: &str) -> (Vec<(i32, i32)>, Vec<(i32, i32)>) {
+    let data = fs::read_to_string(filename).expect("Failed to read file");
     let mut positions = Vec::new();
     let mut velocities = Vec::new();
 
-    for line in input_text.lines() {
-        let parts: Vec<&str> = line.split_whitespace().collect();
+    for line in data.trim().lines() {
+        let parts: Vec<&str> = line.split(' ').collect();
         let position: Vec<i32> = parts[0]
             .split('=')
             .nth(1)
@@ -40,9 +41,15 @@ fn simulate_positions(
     positions
         .iter()
         .zip(velocities.iter())
-        .map(|(&(px, py), &(vx, vy))| ((px + vx * steps) % width, (py + vy * steps) % height))
+        .map(|(&(px, py), &(vx, vy))| {
+            (
+                (px + vx * steps).rem_euclid(width),
+                (py + vy * steps).rem_euclid(height),
+            )
+        })
         .collect()
 }
+
 
 fn calculate_entropy(positions: &[(i32, i32)], width: i32, height: i32) -> f64 {
     let total = positions.len() as f64;
@@ -62,10 +69,7 @@ fn calculate_entropy(positions: &[(i32, i32)], width: i32, height: i32) -> f64 {
         .filter(|&p| p > 0.0)
         .collect();
 
-    probabilities
-        .iter()
-        .map(|&p| -p * p.log2())
-        .sum::<f64>()
+    probabilities.iter().map(|&p| -p * p.log2()).sum::<f64>()
 }
 
 fn calculate_largest_cluster(positions: &[(i32, i32)], _width: i32, _height: i32, bin_size: i32) -> i32 {
@@ -80,26 +84,24 @@ fn calculate_largest_cluster(positions: &[(i32, i32)], _width: i32, _height: i32
     *grid.values().max().unwrap_or(&0)
 }
 
-fn compute_safety_factor(positions: &[(i32, i32)], width: i32, height: i32) -> i32 {
+fn compute_safety_factor(positions: &[(i32, i32)], width: i32, height: i32) -> i64 {
     let half_width = width / 2;
     let half_height = height / 2;
 
     let quadrants = vec![
-        positions.iter().filter(|&&(x, y)| x < half_width && y < half_height).count() as i32,
-        positions.iter().filter(|&&(x, y)| x > half_width && y < half_height).count() as i32,
-        positions.iter().filter(|&&(x, y)| x < half_width && y > half_height).count() as i32,
-        positions.iter().filter(|&&(x, y)| x > half_width && y > half_height).count() as i32,
+        positions.iter().filter(|&&(x, y)| x < half_width && y < half_height).count() as i64,
+        positions.iter().filter(|&&(x, y)| x > half_width && y < half_height).count() as i64,
+        positions.iter().filter(|&&(x, y)| x < half_width && y > half_height).count() as i64,
+        positions.iter().filter(|&&(x, y)| x > half_width && y > half_height).count() as i64,
     ];
 
     quadrants.iter().product()
 }
 
 fn part1() {
-    let input_text = fs::read_to_string("my_input.txt").unwrap();
-    let (positions, velocities) = parse_input(&input_text);
+    let (positions, velocities) = parse_input("my_input.txt");
 
-    let width = 101;
-    let height = 103;
+    let (width, height) = (101, 103);
     let steps = 100;
 
     let final_positions = simulate_positions(&positions, &velocities, width, height, steps);
@@ -109,11 +111,9 @@ fn part1() {
 }
 
 fn part2() {
-    let input_text = fs::read_to_string("my_input.txt").unwrap();
-    let (positions, velocities) = parse_input(&input_text);
+    let (positions, velocities) = parse_input("my_input.txt");
 
-    let width = 101;
-    let height = 103;
+    let (width, height) = (101, 103);
     let mut last_entropy = f64::INFINITY;
     let mut last_steps = 0;
 
@@ -135,11 +135,9 @@ fn part2() {
 }
 
 fn part3() {
-    let input_text = fs::read_to_string("my_input.txt").unwrap();
-    let (positions, velocities) = parse_input(&input_text);
+    let (positions, velocities) = parse_input("my_input.txt");
 
-    let width = 101;
-    let height = 103;
+    let (width, height) = (101, 103);
     let mut last_largest_cluster = 0;
     let mut last_steps = 0;
 

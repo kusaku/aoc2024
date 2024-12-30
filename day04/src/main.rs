@@ -91,16 +91,16 @@ impl Grid {
 }
 
 fn part1() {
-    let grid_input = fs::read_to_string("my_input.txt").expect("Error reading file");
-    let grid = Grid::new(&grid_input);
+    let data = fs::read_to_string("my_input.txt").expect("Failed to read file");
+    let grid = Grid::new(data.trim());
     let word: Vec<char> = "XMAS".chars().collect();
     let count = grid.count_word_matches(&word);
     println!("Answer: {}", count);
 }
 
 fn part2() {
-    let grid_input = fs::read_to_string("my_input.txt").expect("Error reading file");
-    let grid = Grid::new(&grid_input);
+    let data = fs::read_to_string("my_input.txt").expect("Failed to read file");
+    let grid = Grid::new(data.trim());
     let patterns = vec![
         Grid::new("M.S\n.A.\nM.S"),
         Grid::new("M.M\n.A.\nS.S"),
@@ -113,8 +113,8 @@ fn part2() {
 }
 
 fn part1_as_2() {
-    let grid_input = fs::read_to_string("my_input.txt").expect("Error reading file");
-    let grid = Grid::new(&grid_input);
+    let data = fs::read_to_string("my_input.txt").expect("Failed to read file");
+    let grid = Grid::new(data.trim());
     let patterns = vec![
         Grid::new("XMAS"),                   // Horizontal left-to-right
         Grid::new("SAMX"),                   // Horizontal right-to-left

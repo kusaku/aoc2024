@@ -6,11 +6,12 @@ type Point = (usize, usize);
 fn parse_input(filename: &str) -> Vec<Point> {
     fs::read_to_string(filename)
         .expect("Failed to read file")
+        .trim()
         .lines()
         .map(|line| {
             let parts: Vec<usize> = line
                 .split(',')
-                .map(|s| s.parse().expect("Failed to parse number"))
+                .map(|s| s.parse().unwrap())
                 .collect();
             (parts[0], parts[1])
         })

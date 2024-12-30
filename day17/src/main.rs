@@ -1,8 +1,8 @@
 use std::fs;
 
-fn parse_data(filename: &str) -> ((u64, u64, u64), Vec<u64>) {
-    let data = fs::read_to_string(filename).expect("Failed to read input file");
-    let lines: Vec<&str> = data.lines().filter(|line| !line.trim().is_empty()).collect();
+fn parse_input(filename: &str) -> ((u64, u64, u64), Vec<u64>) {
+    let data = fs::read_to_string(filename).expect("Failed to read file");
+    let lines: Vec<&str> = data.trim().lines().filter(|line| !line.trim().is_empty()).collect();
     let a = lines[0].split(":").nth(1).unwrap().trim().parse::<u64>().unwrap();
     let b = lines[1].split(":").nth(1).unwrap().trim().parse::<u64>().unwrap();
     let c = lines[2].split(":").nth(1).unwrap().trim().parse::<u64>().unwrap();
@@ -88,7 +88,7 @@ fn run_program(registers: (u64, u64, u64), program: &[u64]) -> Vec<u64> {
 }
 
 fn part1() {
-    let (registers, program) = parse_data("my_input.txt");
+    let (registers, program) = parse_input("my_input.txt");
     let result = run_program(registers, &program);
     let answer = result
         .iter()
@@ -100,7 +100,7 @@ fn part1() {
 }
 
 fn part2() {
-    let (_, program) = parse_data("my_input.txt");
+    let (_, program) = parse_input("my_input.txt");
     let (mut a, b, c) = (1 << (3 * (program.len() - 1)), 0, 0);
     let mut result = vec![0; program.len()];
 
